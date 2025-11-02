@@ -8,4 +8,6 @@ import com.example.ecommerce.model.Category;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category,Long>{
 
+	public  Category findByCategoryName(String categoryName);
+
 }
