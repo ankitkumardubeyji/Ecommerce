@@ -1,1 +1,5 @@
+@RestController
+class ProductController{
 
+
+}
