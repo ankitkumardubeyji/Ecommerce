@@ -1,9 +1,12 @@
 package com.example.ecommerce.payload;
 
 public class CategoryDTO {
-	
+
+	@NotBlank
 	public Long categoryId;
-	
+
+	@NotBlank
+	@Size(min=5, "Category name must be having atleast 5 characters"
 	public String categoryName;
 	
 	public CategoryDTO() {
