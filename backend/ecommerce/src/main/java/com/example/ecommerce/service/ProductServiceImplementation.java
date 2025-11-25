@@ -3,6 +3,9 @@ package com.example.ecommerce.service;
 @Service
 class ProductServiceImplementation implements ProductService{
 
+      @Value("${image.base.url}") // fetching the base url for the image from the application.properties 
+	private String imageBaseUrl;
+
       @Override
       ProductDTO createProduct(ProductDTO productDTO, Long categoryId){
           Category catgeory = categoryRespository.findById(categoryId).orElseThrow(() => new ResourceNotFoundException("category","categoryId",categoryId));
@@ -67,7 +70,7 @@ class ProductServiceImplementation implements ProductService{
             // Mapping from product to productDTO
             ProductDTO fetchedProductDTO = products.map((product) -> {
                  ProductDTO productDTO =  modelMapper.map(product,ProductDTO.class)
-                 productDTO.setImage(product.getImage()); // Construction of the image is pending here 
+                 productDTO.setImage(constructImageUrl(product.getImage())); // Construction of the image is pending here 
                  return productDTO;
                         });
 
@@ -76,10 +79,14 @@ class ProductServiceImplementation implements ProductService{
             productResponse.setPageNumber(productPage.getPageNumber());
             productResponse.setPageSize(productPage.getPageSize());
             productResponse.setTotalElements(product.getTotalElements());
+            productResponse.setTotalPages(product.getTotalPages());
             productResponse.setisLast(product.isLast());
-            return productResponse;
-            
-                  
+            return productResponse;      
+      }
+
+      public String constructImageUrl(String imageName){
+            return imageName.endsWith("/")?imageBaseUrl+ imageName : imageBaseUrl + "/" + imageName);
+                  "
       }
     
 } 
