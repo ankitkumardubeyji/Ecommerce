@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Data // Shortcut for @Getter/@Setter/@ToString 
 @NoArgsConstructor // No Argument constructor
 @AllArgsConstructor // Generates constructors with all the fields as the parameter 
-class ProductDTO{
+
+public class ProductDTO{
      
       Integer productId;
 
