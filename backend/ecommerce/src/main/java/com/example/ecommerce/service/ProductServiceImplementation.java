@@ -84,6 +84,78 @@ class ProductServiceImplementation implements ProductService{
             return productResponse;      
       }
 
+	  ProductResponse searchProductByCategory(Integer categoryId){
+		Category category = categoryRepository.findById(categoryId)	
+													.orElseThrow(new ResourceNotFoundException("category","categoryId",categoryId);
+
+
+		 List<Product> products = productRepository.findByCategoryIdOrderByPriceAsc(categoryId);
+
+		 if(products.isEmpty()){
+				throw new ApiException("No product exists in the above category");
+		 }
+
+		 ProductDTO fetchedProductDTO =  products.map((product) ->{
+			 return modelMapper.map(product,ProductDTO.class);
+		 }).collect(collectors.toList());
+
+		 ProductResponse productResponse = new ProductResponse();
+		 productResponse.setContent(productDTO);
+		 return productResponse;
+		  
+		}
+
+        ProductResponse searchProductByKeyword(String keyword){
+			List<Product> products = productRepository.findByProductNameLikeIgnoreCase("%"+ keyword + "%");
+
+			 if(products.isEmpty()){
+					throw new ApiException("No product exists in the above category");
+			 }
+	
+			 ProductDTO fetchedProductDTO =  products.map((product) ->{
+				 return modelMapper.map(product,ProductDTO.class);
+			 }).collect(collectors.toList());
+	
+			 ProductResponse productResponse = new ProductResponse();
+			 productResponse.setContent(productDTO);
+			 return productResponse;
+
+		}	
+
+        ProductResponse deleteProduct(Integer productId){
+
+			Product productToBeDeleted = productRepository.findById(productId)
+														.orElseThrow(() -> new ResourceNotFoundException("product","productId",productId);
+
+			ProductRepository.deleteProductById(productId);
+
+			return modelMapper.map(productToBeDeleted, ProductDTO.class);
+			
+			
+		}	
+
+       
+
+			public ProductResponse updateProduct(ProductDTO productDTO, Integer productId) {
+		    Product productToBeUpdated = productRepository.findById(productId)
+		        .orElseThrow(() -> new ResourceNotFoundException("product", "productId", productId));
+		
+		    Product product = modelMapper.map(productDTO, Product.class);
+		    product.setProductId(productId);
+		
+		    Product updatedProduct = productRepository.save(product);
+		
+		    ProductDTO updatedProductDTO = modelMapper.map(updatedProduct, ProductDTO.class);
+		
+		    ProductResponse productResponse = new ProductResponse();
+		    productResponse.setContent(updatedProductDTO);
+		    return productResponse;
+		}
+
+        ProductResponse updateProductImage(Integer productId, MultipartFile image){
+
+		}
+
       public String constructImageUrl(String imageName){
             return imageName.endsWith("/")?imageBaseUrl+ imageName : imageBaseUrl + "/" + imageName);
                   "
