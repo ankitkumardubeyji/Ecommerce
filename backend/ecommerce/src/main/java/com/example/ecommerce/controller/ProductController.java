@@ -12,7 +12,7 @@ import jakarta.validation.Valid;
 class ProductController{
 
 	@PostMapping("admin/categories/{categoryId}/product)
-    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable categoryId){
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable String categoryId){
     	ProductDTO savedProductDTO = productService.createProduct(productDTO,categoryId);
 		return new ResponseEntity<>(savedProductDTO,HttpStatus.CREATED);
     }
@@ -30,4 +30,38 @@ class ProductController{
 			return new ResponseEntity<>(productResponse,HttpStatus.OK);
 		
 	}
+
+	@GetMapping("public/products/{categoryId})
+	public ResponseEntity<ProductResponse> getProductsByCategory(@PathVariable String categoryId){
+		ProductResponse productResponse = productService.searchProductByCategory(categoryId);
+		return new ResponseEntity<>(productResponse,HttpStatus.OK);
+	}
+
+	@GetMapping("/public/products/{keyword})								
+	public ResponseEntity<ProductResponse> getProductsByKeyword(@PathVariable String keyword){
+		ProductResponse productResponse = productService.searchProductByKeyword(keyword);
+		return new ResponseEntity<>(productResponse, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/admin/products/{productId})
+	public ResponseEntity<ProductDTO> deleteProduct(@PathVariable String productId){
+		ProductDTO deletedProductDTO = productService.deleteProduct(productId);
+		return new ResponseEntity<>(deletedProductDTO, HttpStatus.OK);
+		}	
+
+	@PutMapping("/admin/products/{productId})						
+	public ResponseEntity<ProductDTO> updateProduct(ProductDTO productDTO, @PathVariable Long productId){
+		 ProductDTO updatedProductDTO = productService.updateProduct(productDTO,productId);
+		 return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
+		}
+		
+
+	@PutMapping("/products/{productId}/image)								
+    public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId, @RequestParam("image") MultipartFile image) throws IOException{
+		ProductDTO updatedProductDTO = productService.updateProductImage(productId,image);
+		return new ResponseEntity<>(updatedProductDTO,HttpStatus.OK);
+	}
+									
+
+									
 }
