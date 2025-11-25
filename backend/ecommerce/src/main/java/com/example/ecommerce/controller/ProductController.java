@@ -17,17 +17,7 @@ class ProductController{
 		return new ResponseEntity<>(savedProductDTO,HttpStatus.CREATED);
     }
 
-	public ResponseEntity<CategoryResponse> getAllCategories(
-			@RequestParam(name="pageNumber",defaultValue = AppConstants.pageNumber,required = false)Integer pageNumber,
-			@RequestParam(name="pageSize",defaultValue = AppConstants.pageSize, required = false) Integer pageSize,
-			@RequestParam(name = "sortBy",defaultValue = AppConstants.SORT_CATEGORIES_BY , required = false)String sortBy,
-			@RequestParam(name="sortOrder",defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder){
-		
-		CategoryResponse categoryResponse = categoryService.getAllCategories(pageNumber,pageSize,sortBy,sortOrder);
-		return new ResponseEntity<CategoryResponse>(categoryResponse,HttpStatus.OK);
-
-	}
-
+	@GetMapping("/public/products")							
 	public ResponseEntity<ProductResponse> getAllProducts(
 			@RequestParam(name ="pageNumber", defaultValue = AppConstants.pageNumber, required=false)Integer pageNumber,
 			@RequestParam(name="pageSize",defaultValye =  AppConstants.pageSize,required=false)Integer pageSize,
@@ -35,9 +25,9 @@ class ProductController{
 			@RequestParam(name="sortOrder",defaultValue =  AppConstants.SORT_DIR , required=false) String sortOrder,
 			@RequestParam(name="categoryName",defaultValue = AppConstants.CATEGORY_NAME, required=false) String categoryName,
 			@RequestParam(name="keyword , defaultValue = AppConstants.KEYWORD, required = false) String keyword){
-		}
 
-									
-									
-
+			ProductResponse productResponse = productService.getAllProducts(pageNumber,pageSize,sortBy,sortOrder,categoryName,keyword);
+			return new ResponseEntity<>(productResponse,HttpStatus.OK);
+		
+	}
 }
