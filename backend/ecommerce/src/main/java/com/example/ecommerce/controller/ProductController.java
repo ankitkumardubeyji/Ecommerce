@@ -11,9 +11,10 @@ import jakarta.validation.Valid;
 @RequestMapping("/api")
 class ProductController{
 
-	
+	@PostMapping("admin/categories/{categoryId}/product)
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable categoryId){
-    	
+    	ProductDTO savedProductDTO = productService.createProduct(productDTO,categoryId);
+		return new ResponseEntity<>(savedProductDTO,HttpStatus.CREATED);
     }
 	
 
