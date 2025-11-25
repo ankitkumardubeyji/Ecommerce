@@ -1,4 +1,5 @@
+package com.example.ecommerce.service;
 
-class ProductServiceImplementation implements Products{
+class ProductServiceImplementation implements ProductService{
   
 } 

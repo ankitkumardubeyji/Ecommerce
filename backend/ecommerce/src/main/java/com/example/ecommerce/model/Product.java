@@ -1,3 +1,16 @@
+package com.example.ecommerce.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data // Shortcut for @Getter/@Setter/@ToString 
@@ -5,7 +18,7 @@
 @AllArgsConstructor // Generates constructors with all the fields as the parameter 
 class Product{
       @Id
-      @GeneratedValue(StrategyType="GenerationType.IDENTITY")
+      @GeneratedValue(strategy=GenerationType.IDENTITY)
       Integer productId;
 
       @NotBlank
@@ -23,7 +36,7 @@ class Product{
       Integer specialPrice;
 
       @ManyToOne // Many products belong to one Category
-      @JoinColumn(name="category_id) // A foreign key corresponding to the parent table Category will be created in the Child table Product with the name as category_id
+      @JoinColumn(name="category_id") // A foreign key corresponding to the parent table Category will be created in the Child table Product with the name as category_id"
       private Category category;
       
   

@@ -1,13 +1,15 @@
 package com.example.ecommerce.payload;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class CategoryDTO {
 
-	@NotBlank
-	public Long categoryId;
+	private Long categoryId;
 
-	@NotBlank
-	@Size(min=5, "Category name must be having atleast 5 characters"
-	public String categoryName;
+	//@NotBlank
+	//@Size(min=5, message="Category name must be having atleast 5 characters")
+	private String categoryName;
 	
 	public CategoryDTO() {
 		

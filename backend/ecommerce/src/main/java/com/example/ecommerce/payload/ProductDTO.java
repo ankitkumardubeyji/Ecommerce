@@ -1,9 +1,15 @@
+package com.example.ecommerce.payload;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data // Shortcut for @Getter/@Setter/@ToString 
 @NoArgsConstructor // No Argument constructor
 @AllArgsConstructor // Generates constructors with all the fields as the parameter 
-class Product{
+class ProductDTO{
      
       Integer productId;
 

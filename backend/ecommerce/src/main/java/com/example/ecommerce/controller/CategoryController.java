@@ -32,6 +32,7 @@ public class CategoryController {
 	        @Valid @RequestBody CategoryDTO categoryDTO) {
 	    CategoryDTO savedCategoryDTO = categoryService.createCategory(categoryDTO);
 	    return new ResponseEntity<>(savedCategoryDTO, HttpStatus.CREATED);
+	  
 	}
 
 	
