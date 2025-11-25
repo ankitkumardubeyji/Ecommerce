@@ -158,7 +158,7 @@ class ProductServiceImplementation implements ProductService{
 
       public String constructImageUrl(String imageName){
             return imageName.endsWith("/")?imageBaseUrl+ imageName : imageBaseUrl + "/" + imageName);
-                  "
+                  
       }
     
 } 
