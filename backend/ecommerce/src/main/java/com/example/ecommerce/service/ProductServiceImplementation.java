@@ -6,6 +6,9 @@ class ProductServiceImplementation implements ProductService{
       @Value("${image.base.url}") // fetching the base url for the image from the application.properties 
 	private String imageBaseUrl;
 
+	@Value("${project.image}") 
+	private String path;
+
       @Override
       ProductDTO createProduct(ProductDTO productDTO, Long categoryId){
           Category catgeory = categoryRespository.findById(categoryId).orElseThrow(() => new ResourceNotFoundException("category","categoryId",categoryId));
@@ -152,8 +155,21 @@ class ProductServiceImplementation implements ProductService{
 		    return productResponse;
 		}
 
-        ProductResponse updateProductImage(Integer productId, MultipartFile image){
+		@Override
+      public ProductDTO updateProductImage(Integer productId, MultipartFile image){
+			Product productFromDb = productRepository.findById(productId)
+												.orElseThrow(new ResourceNotFoundException("product","productId",productId);
 
+		  	// Uploading the image to the server , Getting the filename of the uploaded image 
+			String filename = fileService.uploadImage(path,image);
+
+		  	// Updating the new file name to the product
+		    productFromDb.setImage(filename);
+
+			  	// Saving the updatedproduct
+			  Product updatedProduct = productRepository.save(productFromDb);
+	
+			  return modelMapper.map(updatedProduct, productDTO.class);
 		}
 
       public String constructImageUrl(String imageName){
