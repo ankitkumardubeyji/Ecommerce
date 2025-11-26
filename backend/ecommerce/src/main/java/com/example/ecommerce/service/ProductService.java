@@ -1,20 +1,26 @@
 package com.example.ecommerce.service;
 
-interface ProductService{
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.ecommerce.payload.ProductDTO;
+import com.example.ecommerce.payload.ProductResponse;
+
+public interface ProductService{
 
         ProductDTO createProduct(ProductDTO productDTO, Long categoryId);
 
         ProductResponse getAllProducts(Integer pageNumber,Integer pageSize,String sortBy,String sortOrder,String categoryName,String keyword);
 
-        ProductResponse searchProductByCategory(Integer categoryId);
+        /*
+        ProductResponse searchProductByCategory(Long categoryId);
 
         ProductResponse searchProductByKeyword(String keyword);
 
-        ProductResponse deleteProduct(Integer productId);
+        ProductDTO deleteProduct(Long productId);
 
-        ProductResponse updateProduct(ProductDTO productDTO , Integer  productId);
+        ProductDTO updateProduct(ProductDTO productDTO , Long  productId);
 
-        ProductResponse updateProductImage(Integer productId, MultipartFile image);
+        ProductDTO updateProductImage(Long productId, MultipartFile image);*/
         
     
 }

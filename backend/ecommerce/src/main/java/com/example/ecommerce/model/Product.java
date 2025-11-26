@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data // Shortcut for @Getter/@Setter/@ToString 
 @NoArgsConstructor // No Argument constructor
 @AllArgsConstructor // Generates constructors with all the fields as the parameter 
-class Product{
+public class Product{
       @Id
       @GeneratedValue(strategy=GenerationType.IDENTITY)
       Integer productId;
@@ -31,9 +31,9 @@ class Product{
       String description;
   
       Integer quantity;
-      Integer price;
-      Integer discount;
-      Integer specialPrice;
+      Double price;
+      Double discount;
+      Double specialPrice;
 
       @ManyToOne // Many products belong to one Category
       @JoinColumn(name="category_id") // A foreign key corresponding to the parent table Category will be created in the Child table Product with the name as category_id"

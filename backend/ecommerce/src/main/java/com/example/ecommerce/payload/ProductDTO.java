@@ -24,8 +24,8 @@ public class ProductDTO{
       String description;
   
       Integer quantity;
-      Integer price;
-      Integer discount;
-      Integer specialPrice;
+      double price;
+      double discount;
+      double specialPrice;
   
 }
