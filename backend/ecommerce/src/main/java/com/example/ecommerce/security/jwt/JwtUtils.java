@@ -1,6 +1,5 @@
 public class JwtUtils{
 
-   
     /*
         // Usually header looks like: "Authorization: Bearer <token>", 
         public String getJwtFromHeader(HttpServletRequest request){ // method for extracting the jwt token part  from the request header  
@@ -28,7 +27,6 @@ public class JwtUtils{
 
     }
 
-
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal){
         String jwt = getTokenFromUsername(userPrincipal.getUsername()); // getting the string username from the custom UserDetails implementation and passing as the parameter 
 
@@ -54,70 +52,29 @@ public class JwtUtils{
     	return cookie;						
     }
     
-
-    /**
-     * ✅ Generate JWT token for a given user.
-     * We store username as subject (sub claim) of the token.
-     */
-    public String generateTokenFromUsername(String username) {
-    // UserDetails is the interface : that tells ekk user object me kaunse details hone chahiye for authentication and authorisation,has methods like getUsername()
-    // 	UserDetails : spring security khud deta hai jab tum login authenticate krte ho,tumhara userdatilservice jasie JDBCUserdetailManager database se user fetch krta hai :Fir wo user ko object ke form
-    // me return krta hai,jo userDetail ko implement krta hain.	
-    	
-    	
-        // Get username from UserDetails object
-        //String username = userDetails.getUsername();
-
-        // Build JWT token:
-        return Jwts.builder()
-                .subject(username) // set the 'sub' claim = username,in most simple JWT setups, storing just the username is enough because it uniquely identifies the user, and authentication on every request can be done using this claim plus token validation.
-                .issuedAt(new Date()) // current time = issue time
-                .expiration(new Date(new Date().getTime() + jwtExpirationMs)) // expiration = now + jwtExpirationMs
-                .signWith(key()) // sign with our secret key
-                .compact(); // build and convert to string token
-    }
-    
-    
-
-    /**
-     * ✅ Extract username (subject) from JWT token.
-     * We parse the token and read its 'sub' (subject) claim.
-     */
-    public String getUserNameFromJWTToken(String token) {
-        return Jwts.parser() // create parser object: that will be used to read and verify jwt tokens
-                .verifyWith((SecretKey) key()) // configures the parser with our secret key that was used to sign jwt,ensures the token has not been tampered with ,if token modified or signature doesnt match parsing fail.
-                .build() // building the parser with key and settings ,after this parser is ready to validate and read tokens
-                .parseSignedClaims(token) // takes the jwt string,and parses into signedJwtObject ,essentially it extracts the payload and header from the token after verifying the signature
-                .getPayload().getSubject(); // retrieves the payload section of the jwt ,this contains all the claims - like sub:username,iat:issuedat
-        					   // getSubject : will return the subject claim from the payload ,in our case this is the username that uniquely identifies the user.
-    
+    // generating the jwt token from the username 
+    public String getTokenFromUsername(String username){
+         return Jwts.builder()
+                    .subject(username) // username is the unique identifier for the user 
+                    .issuedAt(new Date())
+                    .expiration(new Date(new Date().getTime() + jwtExpirationMs))
+                    .signWith(key()) // sign with our secret key 
+                    .compact() ; // build and convert to string token 
     }
 
-    /**
-     * ✅ Generate signing key from our secret.
-     * jwtSecret is a Base64 encoded string. 
-     * We decode it, then use it to create a SecretKey for signing/validating JWT.
-     */
-    public Key key() {
+    public String getUserNameFromJWTToken(String token){
+        return jwts.parser()  // creating a jwt parser 
+                    .verifyWith((SecretKey)key); // setting the secret key for verifying the signature 
+                    .build()  // building the parser
+                    .parseSignedClaims(token) // parses the jwt and verifies the signature 
+                    .getPayload().getSubject(); // extract the subject username 
+    }
 
-        // jwtSecret is a Base64-encoded string, e.g., "U2VjcmV0S2V5Rm9ySl..."
-        // Base64 is an encoding technique that converts binary data into text,
-        // making it safe to store or transfer as a string.
-
-        // JWT libraries expect a secret key that is at least 256 bits strong for security.
-
-        // Decoders.BASE64.decode(jwtSecret) 
-        // → Converts the Base64-encoded secret string back into raw bytes.
-        //   These bytes represent the actual secret key material.
-
-        // Keys.hmacShaKeyFor(...) 
-        // → Takes the raw secret key bytes and creates a SecretKey object.
-        //   This SecretKey can be used by cryptographic algorithms to:
-        //     - Sign JWTs when creating tokens
-        //     - Verify JWTs when validating tokens
-
+    
+    public Key key() { // the function converts secret string into cryptographic key
+        // That key is used to sign and verify jwt token 
         return Keys.hmacShaKeyFor(
-                Decoders.BASE64.decode(jwtSecret) // decode Base64 secret into bytes
+                Decoders.BASE64.decode(jwtSecret) // decode Base64 secret into raw bytes, hmacShaKey -> takes those bytes and converts into suitable secret key 
         );
     }
 
