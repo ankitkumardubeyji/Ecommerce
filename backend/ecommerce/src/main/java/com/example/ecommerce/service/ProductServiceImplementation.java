@@ -1,5 +1,6 @@
 package com.example.ecommerce.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,10 @@ public class ProductServiceImplementation implements ProductService{
 	@Autowired
 	private CategoryRepository categoryRepository;
 
+	
+	@Autowired
+	private FileService fileService;
+	
       @Override
     public ProductDTO createProduct(ProductDTO productDTO, Long categoryId){
           Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("category","categoryId",categoryId));
@@ -123,52 +128,58 @@ public class ProductServiceImplementation implements ProductService{
             productResponse.setLast(productPage.isLast());
             return productResponse;      
       }
-      /*
+      
 
-	  ProductResponse searchProductByCategory(Integer categoryId){
+    @Override
+	public  ProductResponse searchProductByCategory(Long categoryId){
 		Category category = categoryRepository.findById(categoryId)	
-													.orElseThrow(new ResourceNotFoundException("category","categoryId",categoryId);
+													.orElseThrow(() -> new ResourceNotFoundException("category","categoryId",categoryId));
 
 
-		 List<Product> products = productRepository.findByCategoryIdOrderByPriceAsc(categoryId);
+		
+		 List<Product> products = productRepository.findByCategoryOrderByPriceAsc(category);
 
 		 if(products.isEmpty()){
 				throw new ApiException("No product exists in the above category");
 		 }
 
-		 ProductDTO fetchedProductDTO =  products.map((product) ->{
+		 List<ProductDTO> fetchedProductDTO =  products.stream().map((product) ->{
 			 return modelMapper.map(product,ProductDTO.class);
-		 }).collect(collectors.toList());
+		 }).collect(Collectors.toList());
+		 
 
 		 ProductResponse productResponse = new ProductResponse();
-		 productResponse.setContent(productDTO);
+		 productResponse.setContent(fetchedProductDTO);
 		 return productResponse;
 		  
 		}
 
-        ProductResponse searchProductByKeyword(String keyword){
+    @Override
+      public  ProductResponse searchProductByKeyword(String keyword){
 			List<Product> products = productRepository.findByProductNameLikeIgnoreCase("%"+ keyword + "%");
 
 			 if(products.isEmpty()){
 					throw new ApiException("No product exists in the above category");
 			 }
 	
-			 ProductDTO fetchedProductDTO =  products.map((product) ->{
+			 List<ProductDTO> fetchedProductDTO =  products.stream().map((product) ->{
 				 return modelMapper.map(product,ProductDTO.class);
-			 }).collect(collectors.toList());
+			 }).collect(Collectors.toList());
 	
 			 ProductResponse productResponse = new ProductResponse();
-			 productResponse.setContent(productDTO);
+			 productResponse.setContent(fetchedProductDTO);
 			 return productResponse;
 
 		}	
 
-        ProductResponse deleteProduct(Integer productId){
+        
+    @Override 
+     public ProductDTO deleteProduct(Long productId){
 
 			Product productToBeDeleted = productRepository.findById(productId)
-														.orElseThrow(() -> new ResourceNotFoundException("product","productId",productId);
+														.orElseThrow(() -> new ResourceNotFoundException("product","productId",productId));
 
-			ProductRepository.deleteProductById(productId);
+		   	productRepository.deleteById(productId);
 
 			return modelMapper.map(productToBeDeleted, ProductDTO.class);
 			
@@ -176,42 +187,42 @@ public class ProductServiceImplementation implements ProductService{
 		}	
 
        
+    @Override
+		public ProductDTO updateProduct(ProductDTO productDTO, Long productId) {
+	    Product productToBeUpdated = productRepository.findById(productId)
+	        .orElseThrow(() -> new ResourceNotFoundException("product", "productId", productId));
+	
+	    Product product = modelMapper.map(productDTO, Product.class);
+	    product.setProductId(productId);
+	
+	    Product updatedProduct = productRepository.save(product);
+	
+	    ProductDTO updatedProductDTO = modelMapper.map(updatedProduct, ProductDTO.class);
+	
+	    return updatedProductDTO;
+	}
 
-			public ProductResponse updateProduct(ProductDTO productDTO, Integer productId) {
-		    Product productToBeUpdated = productRepository.findById(productId)
-		        .orElseThrow(() -> new ResourceNotFoundException("product", "productId", productId));
-		
-		    Product product = modelMapper.map(productDTO, Product.class);
-		    product.setProductId(productId);
-		
-		    Product updatedProduct = productRepository.save(product);
-		
-		    ProductDTO updatedProductDTO = modelMapper.map(updatedProduct, ProductDTO.class);
-		
-		    ProductResponse productResponse = new ProductResponse();
-		    productResponse.setContent(updatedProductDTO);
-		    return productResponse;
-		}
-
-		@Override
-      public ProductDTO updateProductImage(Integer productId, MultipartFile image){
+	 @Override
+      public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
+		 
 			Product productFromDb = productRepository.findById(productId)
-												.orElseThrow(new ResourceNotFoundException("product","productId",productId);
+												.orElseThrow(() -> new ResourceNotFoundException("product","productId",productId));
+			
 
 		  	// Uploading the image to the server , Getting the filename of the uploaded image 
 			String filename = fileService.uploadImage(path,image);
 
 		  	// Updating the new file name to the product
-		    productFromDb.setImage(filename);
+		     productFromDb.setImage(filename);
 
 			  	// Saving the updatedproduct
 			  Product updatedProduct = productRepository.save(productFromDb);
 	
-			  return modelMapper.map(updatedProduct, productDTO.class);
+			  return modelMapper.map(updatedProduct,ProductDTO.class);
 		}
 
      
-      */
+      
       
       public String constructImageUrl(String imageName){
           return imageName.endsWith("/")?imageBaseUrl+ imageName : imageBaseUrl + "/" + imageName;

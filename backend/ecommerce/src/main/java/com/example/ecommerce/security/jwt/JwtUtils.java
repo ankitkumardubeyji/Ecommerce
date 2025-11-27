@@ -1,3 +1,6 @@
+package com.example.ecommerce.security.jwt;
+
+
 public class JwtUtils{
 
     /*
@@ -16,6 +19,7 @@ public class JwtUtils{
         }
 
     */
+
 
 
     public String getJwtFromCookies(HttpServletRequest request){ // method will be used to extract the jwt token from the cookie present in the incoming request 
@@ -89,6 +93,8 @@ public class JwtUtils{
      * If token is valid, returns true.
      * If token is invalid/expired/etc., logs error and returns false.
      */
+
+
     public boolean validateJwtToken(String authToken) {
         try {
             System.out.println("Validate");
@@ -133,3 +139,4 @@ public class JwtUtils{
 
 
 }
+

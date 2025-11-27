@@ -1,4 +1,14 @@
-public class UserDetailsServiceImplementatin implements UserDetailsService{
+package com.example.ecommerce.security.services;
+
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import jakarta.transaction.Transactional;
+
+
+public class UserDetailsServiceImplementation implements UserDetailsService{
 
 
     @Override
