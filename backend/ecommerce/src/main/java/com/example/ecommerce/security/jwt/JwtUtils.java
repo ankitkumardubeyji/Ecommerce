@@ -44,8 +44,8 @@ public class JwtUtils{
             return cookie.getValue();
         }
         return null;
-
     }
+
 
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal){
         String jwt = getTokenFromUsername(userPrincipal.getUsername()); // getting the string username from the custom UserDetails implementation and passing as the parameter 
@@ -61,8 +61,6 @@ public class JwtUtils{
 
     }
 
-    
-    
     public ResponseCookie getCleanJwtCookie( ) {
     	
     	ResponseCookie cookie = ResponseCookie.from(jwtCookie,null) // jwtCookie is the cookie name
@@ -78,7 +76,7 @@ public class JwtUtils{
                     .subject(username) // username is the unique identifier for the user 
                     .issuedAt(new Date())
                     .expiration(new Date(new Date().getTime() + jwtExpirationMs))
-                    .signWith(key()) // sign with our secret key 
+                    .signWith(key()) // sign with our secret key , that is cryptographed 
                     .compact() ; // build and convert to string token 
     }
 
@@ -98,58 +96,38 @@ public class JwtUtils{
         );
     }
 
+    public boolean validateJwtToken(String authToken){
+        
+        try{
+                 Jwts.parser()
+                    .verifyWith((SecretKey)key())
+                    .build()
+                    .parseSignedClaims(authToken);
 
-    /**
-     * ✅ Validate JWT token.
-     * Checks if:
-     *  - token signature is valid
-     *  - token is not expired
-     *  - token format is correct
-     *
-     * If token is valid, returns true.
-     * If token is invalid/expired/etc., logs error and returns false.
-     */
+                    return true;
 
-
-    public boolean validateJwtToken(String authToken) {
-        try {
-            System.out.println("Validate");
-
-         // Step 1: Create a JWT parser object
-            Jwts.parser() 
-                // Step 2: Provide the secret key to verify the token's signature
-                .verifyWith((SecretKey) key()) 
-                // Step 3: Build/finalize the parser. Now it's ready to parse and validate tokens
-                .build() 
-                // Step 4: Parse the token. This does two things:
-                //         1. Verifies the token signature matches the secret key
-                //         2. Extracts the claims (payload) if the signature is valid
-                // If the signature is invalid or token is tampered, an exception is thrown here
-                .parseSignedClaims(authToken); 
-
-            // Step 5: If no exception was thrown so far, the token is valid
-            return true;
-
-
-        } catch (MalformedJwtException e) {
-            // Thrown when token format is invalid (broken token string)
-            logger.error("Invalid JWT Token: " + e.getMessage());
-
-        } catch (ExpiredJwtException e) {
-            // Thrown when token expiration date has passed
-            logger.error("JWT Token is expired: " + e.getMessage());
-
-        } catch (UnsupportedJwtException e) {
-            // Thrown when token uses an unsupported JWT feature
-            logger.error("JWT Token is unsupported: " + e.getMessage());
-
-        } catch (IllegalArgumentException e) {
-            // Thrown when claims string is empty or null
-            logger.error("JWT claims string is empty: " + e.getMessage());
+        }
+        catch(MalformedJwtException e){
+            // throw when token format is invalid or broken string
+            logger.error("Invalid Jwt Token:"+e.getMessage());
         }
 
-        // If any exception happened, token is invalid
-        return false;
+        catch(ExpiredJwtException e){
+            // thrown when expiration data has passed.
+            logger.error("Jwt token is expired ",e.getMessage());
+        }
+
+        catch(UnsupportedJwtException e){
+            // throw when token uses unsupported jwt token feature.
+            logger.error("Token uses unsupported  jwt feature"+e.getMessage());
+        }
+
+        catch(IllegalArgumentException e){
+            // thrown when claim string in token is empty 
+            logger.error("Jwt claims string is empty",e.getMessage());
+        }
+
+       
     }
 
 
