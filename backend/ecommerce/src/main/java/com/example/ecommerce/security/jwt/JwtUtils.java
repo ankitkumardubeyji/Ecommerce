@@ -1,5 +1,21 @@
 package com.example.ecommerce.security.jwt;
 
+import java.security.Key;
+import java.sql.Date;
+
+import javax.crypto.SecretKey;
+
+import org.springframework.http.ResponseCookie;
+import org.springframework.web.util.WebUtils;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class JwtUtils{
 
