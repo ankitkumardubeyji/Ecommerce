@@ -1,7 +1,25 @@
-package com.example.ecommerce.security.jwt 
+package com.example.ecommerce.security.jwt;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.http.MediaType;  // CORRECT
+import org.springframework.security.core.AuthenticationException;  // CORRECT
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component 
-public class AuthEntryPointJwt extends AuthenticationEntryPoint { // used to define behaviour of the application when unauthenticated user tries to access the private resource 
+public class AuthEntryPointJwt implements AuthenticationEntryPoint { // used to define behaviour of the application when unauthenticated user tries to access the private resource 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 	
     @Override // This is used for defining the behaviour when the unauthenticated user is trying to access the private resource 
@@ -19,7 +37,7 @@ public class AuthEntryPointJwt extends AuthenticationEntryPoint { // used to def
         body.put("error","Unauthorized");
         body.put("message",authException.getMessage());
 
-        body.put("path",request.getServletPath);
+        body.put("path",request.getServletPath());
 
         final ObjectMapper mapper = new ObjectMapper(); // objectMapper is a java jackson main class for converting between javaobjects and json 
 

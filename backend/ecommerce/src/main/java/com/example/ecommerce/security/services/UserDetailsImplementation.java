@@ -1,20 +1,25 @@
+package com.example.ecommerce.security.services;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.ecommerce.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
 @Data 
 @NoArgsConstructor 
-
+@AllArgsConstructor
 public class UserDetailsImplementation implements UserDetails{
 
     private static final long serialVersionUID = 1L;
@@ -38,28 +43,19 @@ public class UserDetailsImplementation implements UserDetails{
 
         return new UserDetailsImplementation(
             user.getUserId(),
-            user.getUsername(),
+            user.getUserName(),
             user.getEmail(),
             user.getPassword(),
             authorities
-        )               
+        );               
 
     }
 
    @Override // fullfilling the contract done with the interface 
    public  Collection<?extends GrantedAuthority> getAuthorities(){
-    return authorites;
+    return authorities;
    } 
 
-   @Override 
-   public Long getId(){
-    return id;
-   }
-
-   @Override 
-   public String getEmail(){
-        return email;
-   }
 
    @Override 
    public String getPassword(){
@@ -77,7 +73,7 @@ public class UserDetailsImplementation implements UserDetails{
    }
 
    @Override 
-   public boolean isCredentialNonExpired(){
+   public boolean isCredentialsNonExpired(){
         return true;
    }
 
